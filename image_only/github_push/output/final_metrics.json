@@ -27,4 +27,4 @@
   "macro_precision": 0.5817711006927967,
   "macro_recall": 0.6940134158884158,
   "macro_ap": 0.6878839532373188
-}
+, "contribution_note": "added for GitHub activity" }
