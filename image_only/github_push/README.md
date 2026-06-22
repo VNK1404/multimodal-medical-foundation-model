@@ -144,3 +144,6 @@ Key hyperparameters (full config in [`configs/training_config.json`](configs/tra
 | `image_embeddings.npy` | ~89 MB | 512-dim visual embeddings for fusion |
 
 Download from Kaggle notebook output: `mimic_cxr_image_branch_outputs.zip`
+
+
+?? Last updated on 2026-06-22 22:00:10
