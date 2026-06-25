@@ -1,0 +1,15 @@
+torch
+torchvision
+pytorch-lightning
+transformers
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+shap
+captum
+faiss-cpu
+chromadb
+fastapi
+uvicorn

@@ -1,0 +1,145 @@
+Dataset and Pre‑processing Pipeline – Full Narrative
+===================================================
+
+1. **Dataset Overview**
+   - Source: CheXpert chest‑X‑ray dataset (multi‑label, 5 disease targets).
+   - Manifest: CSV file (`train.csv`) containing relative image paths and binary label columns for the diseases:
+     `Atelectasis, Cardiomegaly, Consolidation, Edema, Pleural Effusion`.
+   - All images live under `d:/proejects/Multimodal Medical Foundation Model/image_only/chexpert/`.
+   - After cleaning we end up with ~223 k training samples and ~55 k validation samples.
+
+2. **Initial Load**
+   ```python
+   df = pd.read_csv(CSV_PATH)
+   df = df[["Path"] + TARGETS]   # keep only needed columns
+   ```
+   This strips any unrelated columns (e.g., patient info) that are not required for image‑based training.
+
+3. **Path Normalisation**
+   - Some rows contain duplicated slashes such as `train/train/`.
+   - We replace any sequence of two or more `/` with a single `/` using a regular‑expression replace.
+   - Then we prepend the absolute root directory so every entry becomes an absolute path that `PIL.Image.open` can read.
+   ```python
+   df["Path"] = df["Path"].str.replace(r"/{2,}", "/", regex=True)
+   df["Path"] = (DATA_ROOT / df["Path"]).astype(str)
+   ```
+
+4. **Label Sanitisation**
+   - CheXpert uses `‑1` to indicate uncertain findings.
+   - For a conservative training regime we replace `‑1` with `0` (treated as absent) and cast everything to `int`.
+   ```python
+   df[TARGETS] = df[TARGETS].replace(-1, 0).astype(int)
+   ```
+
+5. **Missing‑File Guard**
+   - Occasionally the manifest can reference files that are not present on disk.
+   - We drop any rows whose file does not exist to avoid a `FileNotFoundError` at runtime.
+   ```python
+   df = df[df["Path"].apply(os.path.isfile)].reset_index(drop=True)
+   ```
+
+6. **Stratified Multi‑label Split**
+   - To keep the label distribution identical between train and validation we use `MultilabelStratifiedKFold` from the `iterstrat` package.
+   - We create a 5‑fold split, take the first fold as our train/val pair, and reset the indices.
+   ```python
+   from iterstrat.ml_stratifiers import MultilabelStratifiedKFold
+   mskf = MultilabelStratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+   train_idx, val_idx = next(mskf.split(df[TARGETS], df[TARGETS]))
+   strat_train_df = df.iloc[train_idx].reset_index(drop=True)
+   strat_val_df   = df.iloc[val_idx].reset_index(drop=True)
+   ```
+
+7. **Class‑weight Computation (for FocalLoss)**
+   - Positive‑to‑negative ratios are calculated on the training split.
+   - These ratios become the `pos_weight` argument of the focal loss, helping the model to focus on rare pathologies.
+   ```python
+   pos_counts = strat_train_df[TARGETS].sum()
+   neg_counts = len(strat_train_df) - pos_counts
+   class_weights = (neg_counts / pos_counts.clip(lower=1)).values
+   class_weights_tensor = torch.tensor(class_weights, dtype=torch.float32)
+   ```
+
+8. **Image Transform Pipeline**
+   - All images are resized to 224 × 224 pixels (the native input size of the ViT encoder used by BiomedCLIP).
+   - A centre crop ensures a square aspect ratio.
+   - For training we add a random horizontal flip (p=0.5) to augment the data.
+   - Images are converted to tensors and normalised to the BiomedCLIP pre‑training statistics (mean = 0.5, std = 0.5).
+   ```python
+   train_transform = transforms.Compose([
+       transforms.Resize(224),
+       transforms.CenterCrop(224),
+       transforms.RandomHorizontalFlip(p=0.5),
+       transforms.ToTensor(),
+       transforms.Normalize(mean=[0.5,0.5,0.5], std=[0.5,0.5,0.5]),
+   ])
+
+   val_transform = transforms.Compose([
+       transforms.Resize(224),
+       transforms.CenterCrop(224),
+       transforms.ToTensor(),
+       transforms.Normalize(mean=[0.5,0.5,0.5], std=[0.5,0.5,0.5]),
+   ])
+   ```
+
+9. **Dataset Class**
+   - `RobustCheXpertDataset` inherits from `torch.utils.data.Dataset`.
+   - `__getitem__` loads the image, applies the appropriate transform, and returns a tuple `(image_tensor, label_tensor)` where the label is a `torch.float32` vector of length 5.
+   ```python
+   class RobustCheXpertDataset(Dataset):
+       def __init__(self, df, transform=None):
+           self.df = df
+           self.transform = transform
+       def __len__(self):
+           return len(self.df)
+       def __getitem__(self, idx):
+           row = self.df.iloc[idx]
+           img = Image.open(row["Path"]).convert("RGB")
+           if self.transform:
+               img = self.transform(img)
+           label = torch.tensor(row[TARGETS].values, dtype=torch.float32)
+           return img, label
+   ```
+
+10. **DataLoaders**
+    - **Batch size** is set to 128 for training (4× the original size) because after fixing the GPU utilisation issue we have ample memory (~4‑5 GiB used on a 15 GiB T4).
+    - Validation uses a double batch size (256) since no gradients are computed.
+    - `num_workers=6` provides enough CPU parallelism to keep the GPU fed.
+    - `pin_memory=True`, `prefetch_factor=2`, and `persistent_workers=True` improve throughput.
+    ```python
+    train_loader = DataLoader(
+        RobustCheXpertDataset(strat_train_df, transform=train_transform),
+        batch_size=128,
+        shuffle=True,
+        num_workers=6,
+        pin_memory=True,
+        prefetch_factor=2,
+        persistent_workers=True,
+    )
+    val_loader = DataLoader(
+        RobustCheXpertDataset(strat_val_df, transform=val_transform),
+        batch_size=256,
+        shuffle=False,
+        num_workers=6,
+        pin_memory=True,
+        prefetch_factor=2,
+        persistent_workers=True,
+    )
+    ```
+
+11. **Resulting Statistics (printed when the script runs)**
+    - Class‑weight ratios (neg/pos) for each disease – useful for configuring `FocalLoss`.
+    - Number of batches and total sample count for both train and validation loaders.
+    - Confirmation that the dataset is ready for the fine‑tuning loop.
+
+---
+
+**Why each step matters**
+- **Path fixing** prevents crashes caused by malformed file paths.
+- **Label sanitisation** removes uncertain labels that could destabilise loss computation.
+- **Missing‑file removal** guarantees every `__getitem__` call succeeds.
+- **Stratified split** gives a reliable validation set that reflects the real label distribution, which is essential for macro‑AUC evaluation.
+- **Class‑weighting** counters the heavy imbalance typical of medical imaging datasets.
+- **Transforms** align the raw X‑ray images with the expectations of the pretrained ViT encoder while providing mild augmentation.
+- **DataLoaders** are tuned for the hardware (single T4 GPU) to maximise throughput and minimise idle time.
+
+You can now import any of the helper functions from this file in your notebook, or simply run the script directly to reproduce the exact same preprocessing pipeline used for the model training.
