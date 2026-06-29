@@ -1,0 +1,30 @@
+# Model weights (too large for GitHub)
+*.pth
+*.pt
+*.ckpt
+*.bin
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data / large files
+*.pkl
+*.h5
+*.hdf5
+data/
+dataset/
+
+# Environment
+.env
+venv/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db

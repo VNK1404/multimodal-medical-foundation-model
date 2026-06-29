@@ -1,0 +1,76 @@
+{
+    "timestamp": "2026-06-29 14:39:14",
+    "experiment_name": "BiomedCLIP_BioClinicalBERT_Multimodal",
+    "config": {
+        "image_root": "/kaggle/input/datasets/simhadrisadaram/mimic-cxr-dataset/official_data_iccv_final/files",
+        "train_csv": "/kaggle/input/datasets/vedantkulkarni14/labeled-mimic-cxr/labeled_mimic_cxr/mimic_final_labeled_train.csv",
+        "val_csv": "/kaggle/input/datasets/vedantkulkarni14/labeled-mimic-cxr/labeled_mimic_cxr/mimic_final_labeled_validate.csv",
+        "output_dir": "/kaggle/working/artifacts",
+        "disease_labels": [
+            "No Finding",
+            "Cardiomegaly",
+            "Edema",
+            "Pleural Effusion",
+            "Pneumonia",
+            "Pneumothorax"
+        ],
+        "num_classes": 6,
+        "biomed_clip_model": "hf-hub:microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224",
+        "text_model_name": "emilyalsentzer/Bio_ClinicalBERT",
+        "image_embed_dim": 512,
+        "text_embed_dim": 768,
+        "fused_dim": 1280,
+        "max_text_len": 256,
+        "image_size": 224,
+        "epochs": 18,
+        "batch_size": 32,
+        "num_workers": 0,
+        "patience": 5,
+        "max_grad_norm": 1.0,
+        "ema_decay": 0.999,
+        "mixed_precision": true,
+        "tta_enabled": true,
+        "lr_image_encoder": 5e-06,
+        "lr_text_encoder": 2e-05,
+        "lr_fusion_head": 0.0001,
+        "weight_decay": 0.0001,
+        "focal_gamma": 2.0,
+        "weight_clip_min": 0.5,
+        "weight_clip_max": 20.0,
+        "biomed_clip_freeze_blocks": 6,
+        "bert_freeze_layers": 10,
+        "gradcam_block_idx": -2,
+        "threshold_start": 0.1,
+        "threshold_end": 0.9,
+        "threshold_steps": 81,
+        "seed": 42,
+        "device": "cuda",
+        "multi_gpu": true
+    },
+    "dataset": {
+        "train_samples": 45224,
+        "validation_samples": 338,
+        "num_classes": 6,
+        "disease_labels": [
+            "No Finding",
+            "Cardiomegaly",
+            "Edema",
+            "Pleural Effusion",
+            "Pneumonia",
+            "Pneumothorax"
+        ]
+    },
+    "environment": {
+        "python_version": "3.12.13",
+        "torch_version": "2.10.0+cu128",
+        "torchvision_version": "0.25.0+cu128",
+        "transformers_version": "5.0.0",
+        "cuda_available": true,
+        "cuda_version": "12.8",
+        "gpu_count": 2,
+        "gpu_names": [
+            "Tesla T4",
+            "Tesla T4"
+        ]
+    }
+}

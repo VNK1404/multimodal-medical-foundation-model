@@ -1,0 +1,8 @@
+{
+  "No Finding": 0.25,
+  "Cardiomegaly": 0.58,
+  "Edema": 0.5700000000000001,
+  "Pleural Effusion": 0.7,
+  "Pneumonia": 0.62,
+  "Pneumothorax": 0.66
+}
