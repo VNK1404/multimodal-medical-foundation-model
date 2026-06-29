@@ -1,0 +1,285 @@
+{
+    "timestamp": "2026-06-29 14:39:07",
+    "best_model": "EMA",
+    "best_macro_auroc": 0.9382506262128203,
+    "configuration": {
+        "image_root": "/kaggle/input/datasets/simhadrisadaram/mimic-cxr-dataset/official_data_iccv_final/files",
+        "train_csv": "/kaggle/input/datasets/vedantkulkarni14/labeled-mimic-cxr/labeled_mimic_cxr/mimic_final_labeled_train.csv",
+        "val_csv": "/kaggle/input/datasets/vedantkulkarni14/labeled-mimic-cxr/labeled_mimic_cxr/mimic_final_labeled_validate.csv",
+        "output_dir": "/kaggle/working/artifacts",
+        "disease_labels": [
+            "No Finding",
+            "Cardiomegaly",
+            "Edema",
+            "Pleural Effusion",
+            "Pneumonia",
+            "Pneumothorax"
+        ],
+        "num_classes": 6,
+        "biomed_clip_model": "hf-hub:microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224",
+        "text_model_name": "emilyalsentzer/Bio_ClinicalBERT",
+        "image_embed_dim": 512,
+        "text_embed_dim": 768,
+        "fused_dim": 1280,
+        "max_text_len": 256,
+        "image_size": 224,
+        "epochs": 18,
+        "batch_size": 32,
+        "num_workers": 0,
+        "patience": 5,
+        "max_grad_norm": 1.0,
+        "ema_decay": 0.999,
+        "mixed_precision": true,
+        "tta_enabled": true,
+        "lr_image_encoder": 5e-06,
+        "lr_text_encoder": 2e-05,
+        "lr_fusion_head": 0.0001,
+        "weight_decay": 0.0001,
+        "focal_gamma": 2.0,
+        "weight_clip_min": 0.5,
+        "weight_clip_max": 20.0,
+        "biomed_clip_freeze_blocks": 6,
+        "bert_freeze_layers": 10,
+        "gradcam_block_idx": -2,
+        "threshold_start": 0.1,
+        "threshold_end": 0.9,
+        "threshold_steps": 81,
+        "seed": 42,
+        "device": "cuda",
+        "multi_gpu": true
+    },
+    "training_summary": {
+        "epochs_completed": 18,
+        "best_validation_auroc": 0.9382506262128203,
+        "minimum_validation_loss": 0.13783881339159879
+    },
+    "thresholds": {
+        "No Finding": 0.25,
+        "Cardiomegaly": 0.59,
+        "Edema": 0.58,
+        "Pleural Effusion": 0.7,
+        "Pneumonia": 0.62,
+        "Pneumothorax": 0.7
+    },
+    "metrics": {
+        "baseline": {
+            "per_disease": {
+                "No Finding": {
+                    "auroc": 0.9614129460283306,
+                    "f1": 0.9156626506024096,
+                    "accuracy": 0.8964497041420119,
+                    "precision": 0.8636363636363636,
+                    "recall": 0.9743589743589743,
+                    "auprc": 0.9719997785128538,
+                    "threshold": 0.24000000000000002
+                },
+                "Cardiomegaly": {
+                    "auroc": 0.9603672445255474,
+                    "f1": 0.7479674796747967,
+                    "accuracy": 0.908284023668639,
+                    "precision": 0.7796610169491526,
+                    "recall": 0.71875,
+                    "auprc": 0.8560087048206836,
+                    "threshold": 0.6799999999999999
+                },
+                "Edema": {
+                    "auroc": 0.9502457002457002,
+                    "f1": 0.7928994082840237,
+                    "accuracy": 0.8964497041420119,
+                    "precision": 0.7052631578947368,
+                    "recall": 0.9054054054054054,
+                    "auprc": 0.8466427900052478,
+                    "threshold": 0.58
+                },
+                "Pleural Effusion": {
+                    "auroc": 0.9620071684587814,
+                    "f1": 0.8491620111731844,
+                    "accuracy": 0.9201183431952663,
+                    "precision": 0.8539325842696629,
+                    "recall": 0.8444444444444444,
+                    "auprc": 0.9071222536678336,
+                    "threshold": 0.7
+                },
+                "Pneumonia": {
+                    "auroc": 0.9269920363037771,
+                    "f1": 0.7641509433962265,
+                    "accuracy": 0.8520710059171598,
+                    "precision": 0.6694214876033058,
+                    "recall": 0.8901098901098901,
+                    "auprc": 0.8124939700361289,
+                    "threshold": 0.65
+                },
+                "Pneumothorax": {
+                    "auroc": 0.8578616352201258,
+                    "f1": 0.47368421052631576,
+                    "accuracy": 0.9408284023668639,
+                    "precision": 0.5,
+                    "recall": 0.45,
+                    "auprc": 0.4598436040589382,
+                    "threshold": 0.69
+                }
+            },
+            "aggregate": {
+                "macro_auroc": 0.9364811217970438,
+                "micro_auroc": 0.9127226759723037,
+                "macro_f1": 0.7572544506094928,
+                "micro_f1": 0.8257042253521126,
+                "weighted_f1": 0.8249713349154384,
+                "samples_f1": 0.8462548135625061,
+                "macro_precision": 0.7286524350588702,
+                "macro_recall": 0.7971781190531191,
+                "macro_ap": 0.8090185168502809,
+                "mean_auprc": 0.8090185168502809,
+                "exact_match_accuracy": 0.6568047337278107,
+                "hamming_accuracy": 0.9023668639053255,
+                "mean_per_class_accuracy": 0.9023668639053256
+            }
+        },
+        "ema": {
+            "per_disease": {
+                "No Finding": {
+                    "auroc": 0.9620763851533082,
+                    "f1": 0.9138755980861244,
+                    "accuracy": 0.893491124260355,
+                    "precision": 0.8565022421524664,
+                    "recall": 0.9794871794871794,
+                    "auprc": 0.9725949551696758,
+                    "threshold": 0.25
+                },
+                "Cardiomegaly": {
+                    "auroc": 0.963161496350365,
+                    "f1": 0.7651006711409396,
+                    "accuracy": 0.8964497041420119,
+                    "precision": 0.6705882352941176,
+                    "recall": 0.890625,
+                    "auprc": 0.8639878506824303,
+                    "threshold": 0.59
+                },
+                "Edema": {
+                    "auroc": 0.9510902948402948,
+                    "f1": 0.8095238095238095,
+                    "accuracy": 0.9053254437869822,
+                    "precision": 0.723404255319149,
+                    "recall": 0.918918918918919,
+                    "auprc": 0.8458406027785556,
+                    "threshold": 0.58
+                },
+                "Pleural Effusion": {
+                    "auroc": 0.962141577060932,
+                    "f1": 0.8603351955307262,
+                    "accuracy": 0.9260355029585798,
+                    "precision": 0.8651685393258427,
+                    "recall": 0.8555555555555555,
+                    "auprc": 0.9067698782172591,
+                    "threshold": 0.7
+                },
+                "Pneumonia": {
+                    "auroc": 0.9301063309160476,
+                    "f1": 0.7649769585253456,
+                    "accuracy": 0.849112426035503,
+                    "precision": 0.6587301587301587,
+                    "recall": 0.9120879120879121,
+                    "auprc": 0.8209168109944011,
+                    "threshold": 0.62
+                },
+                "Pneumothorax": {
+                    "auroc": 0.8609276729559748,
+                    "f1": 0.47368421052631576,
+                    "accuracy": 0.9408284023668639,
+                    "precision": 0.5,
+                    "recall": 0.45,
+                    "auprc": 0.4513733030020041,
+                    "threshold": 0.7
+                }
+            },
+            "aggregate": {
+                "macro_auroc": 0.9382506262128203,
+                "micro_auroc": 0.9209139930508551,
+                "macro_f1": 0.7645827405555435,
+                "micro_f1": 0.8297690333618477,
+                "weighted_f1": 0.8306998155780421,
+                "samples_f1": 0.851758711374096,
+                "macro_precision": 0.7123989051369556,
+                "macro_recall": 0.8344457610082611,
+                "macro_ap": 0.8102472334740544,
+                "mean_auprc": 0.8102472334740544,
+                "exact_match_accuracy": 0.6449704142011834,
+                "hamming_accuracy": 0.9018737672583826,
+                "mean_per_class_accuracy": 0.9018737672583826
+            }
+        },
+        "ema_tta": {
+            "per_disease": {
+                "No Finding": {
+                    "auroc": 0.9613232920925229,
+                    "f1": 0.9138755980861244,
+                    "accuracy": 0.893491124260355,
+                    "precision": 0.8565022421524664,
+                    "recall": 0.9794871794871794,
+                    "auprc": 0.972031041756534,
+                    "threshold": 0.25
+                },
+                "Cardiomegaly": {
+                    "auroc": 0.9630759580291971,
+                    "f1": 0.7581699346405228,
+                    "accuracy": 0.8905325443786982,
+                    "precision": 0.651685393258427,
+                    "recall": 0.90625,
+                    "auprc": 0.8652223428159633,
+                    "threshold": 0.58
+                },
+                "Edema": {
+                    "auroc": 0.9509367321867321,
+                    "f1": 0.7928994082840237,
+                    "accuracy": 0.8964497041420119,
+                    "precision": 0.7052631578947368,
+                    "recall": 0.9054054054054054,
+                    "auprc": 0.8428352185033712,
+                    "threshold": 0.5700000000000001
+                },
+                "Pleural Effusion": {
+                    "auroc": 0.9620967741935483,
+                    "f1": 0.8603351955307262,
+                    "accuracy": 0.9260355029585798,
+                    "precision": 0.8651685393258427,
+                    "recall": 0.8555555555555555,
+                    "auprc": 0.9051627306219426,
+                    "threshold": 0.7
+                },
+                "Pneumonia": {
+                    "auroc": 0.9292387774169151,
+                    "f1": 0.7627906976744186,
+                    "accuracy": 0.849112426035503,
+                    "precision": 0.6612903225806451,
+                    "recall": 0.9010989010989011,
+                    "auprc": 0.8190055222969608,
+                    "threshold": 0.62
+                },
+                "Pneumothorax": {
+                    "auroc": 0.8617138364779875,
+                    "f1": 0.5,
+                    "accuracy": 0.9289940828402367,
+                    "precision": 0.42857142857142855,
+                    "recall": 0.6,
+                    "auprc": 0.45355724643501877,
+                    "threshold": 0.66
+                }
+            },
+            "aggregate": {
+                "macro_auroc": 0.9380642283994837,
+                "micro_auroc": 0.9208857903524209,
+                "macro_f1": 0.7646784723693028,
+                "micro_f1": 0.8240270727580372,
+                "weighted_f1": 0.8281784545747995,
+                "samples_f1": 0.8476331360946746,
+                "macro_precision": 0.6947468472972577,
+                "macro_recall": 0.8579661735911736,
+                "macro_ap": 0.8096356837382985,
+                "mean_auprc": 0.8096356837382985,
+                "exact_match_accuracy": 0.6301775147928994,
+                "hamming_accuracy": 0.8974358974358975,
+                "mean_per_class_accuracy": 0.8974358974358974
+            }
+        }
+    }
+}
