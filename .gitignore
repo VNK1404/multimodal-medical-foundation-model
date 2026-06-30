@@ -1,4 +1,2 @@
 *.pth
 
-mimic_cxr_aug_train.csv
-mimic_cxr_aug_validate.csv
