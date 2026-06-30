@@ -1,0 +1,123 @@
+{
+  "pipeline_config": {
+    "uncertainty_policy": "ones",
+    "view_priority": [
+      "PA",
+      "AP"
+    ],
+    "targets": [
+      "No Finding",
+      "Cardiomegaly",
+      "Edema",
+      "Pleural Effusion",
+      "Pneumonia",
+      "Pneumothorax"
+    ]
+  },
+  "train": {
+    "n_studies": 45224,
+    "label_stats": [
+      {
+        "Label": "No Finding",
+        "Positive": 24965,
+        "Negative": 20259,
+        "NaN": 0,
+        "Total": 45224,
+        "Prevalence (%)": 55.2
+      },
+      {
+        "Label": "Cardiomegaly",
+        "Positive": 8919,
+        "Negative": 36305,
+        "NaN": 0,
+        "Total": 45224,
+        "Prevalence (%)": 19.72
+      },
+      {
+        "Label": "Edema",
+        "Positive": 9825,
+        "Negative": 35399,
+        "NaN": 0,
+        "Total": 45224,
+        "Prevalence (%)": 21.73
+      },
+      {
+        "Label": "Pleural Effusion",
+        "Positive": 11553,
+        "Negative": 33671,
+        "NaN": 0,
+        "Total": 45224,
+        "Prevalence (%)": 25.55
+      },
+      {
+        "Label": "Pneumonia",
+        "Positive": 12380,
+        "Negative": 32844,
+        "NaN": 0,
+        "Total": 45224,
+        "Prevalence (%)": 27.37
+      },
+      {
+        "Label": "Pneumothorax",
+        "Positive": 2461,
+        "Negative": 42763,
+        "NaN": 0,
+        "Total": 45224,
+        "Prevalence (%)": 5.44
+      }
+    ]
+  },
+  "validate": {
+    "n_studies": 338,
+    "label_stats": [
+      {
+        "Label": "No Finding",
+        "Positive": 195,
+        "Negative": 143,
+        "NaN": 0,
+        "Total": 338,
+        "Prevalence (%)": 57.69
+      },
+      {
+        "Label": "Cardiomegaly",
+        "Positive": 64,
+        "Negative": 274,
+        "NaN": 0,
+        "Total": 338,
+        "Prevalence (%)": 18.93
+      },
+      {
+        "Label": "Edema",
+        "Positive": 74,
+        "Negative": 264,
+        "NaN": 0,
+        "Total": 338,
+        "Prevalence (%)": 21.89
+      },
+      {
+        "Label": "Pleural Effusion",
+        "Positive": 90,
+        "Negative": 248,
+        "NaN": 0,
+        "Total": 338,
+        "Prevalence (%)": 26.63
+      },
+      {
+        "Label": "Pneumonia",
+        "Positive": 91,
+        "Negative": 247,
+        "NaN": 0,
+        "Total": 338,
+        "Prevalence (%)": 26.92
+      },
+      {
+        "Label": "Pneumothorax",
+        "Positive": 20,
+        "Negative": 318,
+        "NaN": 0,
+        "Total": 338,
+        "Prevalence (%)": 5.92
+      }
+    ]
+  }
+}
