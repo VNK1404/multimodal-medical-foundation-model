@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+.venv/
+.env
+.idea/
+.vscode/
+.ipynb_checkpoints/
+data/
+models/
+outputs/
+logs/
+wandb/
+*.ckpt
+*.pt
+*.pth
+
+# Ignore generated clinical reports/labels (MIMIC DUA compliance)
+label_generation/labeled_mimic_cxr/*.csv
+labeled_mimic_cxr/*.csv
