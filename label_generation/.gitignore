@@ -16,6 +16,3 @@ wandb/
 *.pt
 *.pth
 
-# Ignore generated clinical reports/labels (MIMIC DUA compliance)
-label_generation/labeled_mimic_cxr/*.csv
-labeled_mimic_cxr/*.csv
